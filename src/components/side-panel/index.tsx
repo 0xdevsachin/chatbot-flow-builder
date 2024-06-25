@@ -27,9 +27,9 @@ const SidePanel = () => {
             onChange={(e) => setNodeType(e.target.value as NodeTypesEnum)}
             defaultValue={nodeType}
           >
-            <option value={NodeTypesEnum.default}>Default</option>
             <option value={NodeTypesEnum.input}>Input</option>
             <option value={NodeTypesEnum.output}>Output</option>
+            <option value={NodeTypesEnum.default}>Both</option>
           </NodeSelectContainer>
         </NodeHeadingContainer>
         <NodeInput

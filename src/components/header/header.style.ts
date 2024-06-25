@@ -23,14 +23,15 @@ export const SaveButton = styled.button`
   cursor: pointer;
 `;
 
-export const ErrorContainer = styled.div`
+export const ErrorContainer = styled.div<{ status?: string }>`
   height: 50px;
-  width: 150px;
+  min-width: 150px;
   position: absolute;
   top: 30px;
   left: 50%;
   border-radius: 6px;
-  background: red;
+  padding: 0 10px;
+  background: ${(props) => (props.status === "error" ? "red" : "green")};
   color: #fff;
   font-weight: 800;
   display: flex;

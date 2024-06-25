@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import ReactFlow, {
   Background,
@@ -25,14 +25,22 @@ const nodeTypes: NodeTypes = {
 };
 
 const Flow = () => {
-  const [nodes, setNodes] = useState<Node[]>([]);
-  const [edges, setEdges] = useState<Edge[]>([]);
-  const { setState, state, nodeType, nodeMessage, setAllNodesConnected } =
-    useGlobalContext();
+  const {
+    setState,
+    state,
+    nodeType,
+    nodeMessage,
+    setAllNodesConnected,
+    node: nodes,
+    setEdges,
+    setNode: setNodes,
+    edges,
+    setStatus,
+  } = useGlobalContext();
 
   const onNodesChange = useCallback(
     (changes: NodeChange[]) => {
-      setNodes((nds) => applyNodeChanges(changes, nds));
+      setNodes((nds: Node[]) => applyNodeChanges(changes, nds));
     },
     [setNodes]
   );
@@ -54,7 +62,7 @@ const Flow = () => {
       node: Node<any, string | undefined>
     ) => {
       event.preventDefault();
-      setAllNodesConnected(true);
+      setStatus({ type: "", message: "" });
       setState({
         nodeId: node.id,
         openPanel: true,
@@ -68,7 +76,7 @@ const Flow = () => {
   const onPaneClick = useCallback(
     (event: React.MouseEvent<Element, MouseEvent>) => {
       event.preventDefault();
-      setAllNodesConnected(true);
+      setStatus({ type: "", message: "" });
       setState((prev) => ({ ...prev, nodeId: "", openPanel: false }));
     },
     []
@@ -79,7 +87,7 @@ const Flow = () => {
   const handleDragEnter = useCallback(
     (e: React.DragEvent) => {
       e.preventDefault();
-      setAllNodesConnected(true);
+      setStatus({ type: "", message: "" });
       const element: Node = {
         id: uuidv4(),
         data: {
@@ -90,7 +98,7 @@ const Flow = () => {
         position: { x: e.clientX, y: e.clientY },
         type: "default",
       };
-      setNodes((prevNodes) => [...prevNodes, element]);
+      setNodes((prevNodes: Node[]) => [...prevNodes, element]);
     },
     [nodeMessage, nodeType, nodes.length, setNodes]
   );
@@ -98,8 +106,8 @@ const Flow = () => {
   // Drag Event Handlers
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
-    setAllNodesConnected(true);
-    setNodes((elements) => {
+    setStatus({ type: "", message: "" });
+    setNodes((elements: Node[]) => {
       const element = elements[elements.length - 1];
       const newArray = elements.filter((items) => items.id !== element.id);
       return [
@@ -112,8 +120,8 @@ const Flow = () => {
   // Drag Event Handlers
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
-    setAllNodesConnected(true);
-    setNodes((elements) => {
+    setStatus({ type: "", message: "" });
+    setNodes((elements: Node[]) => {
       const element = elements[elements.length - 1];
       const newArray = elements.filter((items) => items.id !== element.id);
       return [
@@ -145,14 +153,14 @@ const Flow = () => {
 
   useEffect(() => {
     // checking save condition
-    const isConnected = validateConnectivity(nodes, edges);
+    const isConnected = validateConnectivity(nodes as unknown as Node[], edges);
     setAllNodesConnected(isConnected);
   }, [nodes, edges]);
 
   return (
     <FlowBuilderContainer>
       <ReactFlow
-        nodes={nodes}
+        nodes={nodes as unknown as Node[]}
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}

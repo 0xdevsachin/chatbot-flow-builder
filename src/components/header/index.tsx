@@ -1,27 +1,17 @@
-import { useEffect, useState } from "react";
 import { useGlobalContext } from "../../context";
 import { ErrorContainer, HeaderContainer, SaveButton } from "./header.style";
 import ConditionalWrapper from "../conditional-wrapper";
 
 const Header = () => {
-  const { allNodesConnected } = useGlobalContext();
-  const [showError, setShowError] = useState(false);
-  const handleClick = () => {
-    if (!allNodesConnected) {
-      setShowError(true);
-      return;
-    }
-    alert("Saved successfully");
-  };
-  useEffect(() => {
-    if (allNodesConnected) setShowError(false);
-  }, [allNodesConnected]);
+  const { status, handleSaveClick } = useGlobalContext();
   return (
     <HeaderContainer>
-      <ConditionalWrapper showChild={showError}>
-        <ErrorContainer>Can't save flow</ErrorContainer>
+      <ConditionalWrapper
+        showChild={status.type === "error" || status.type === "success"}
+      >
+        <ErrorContainer>{status.message}</ErrorContainer>
       </ConditionalWrapper>
-      <SaveButton onClick={handleClick}>Save Changes</SaveButton>
+      <SaveButton onClick={handleSaveClick}>Save Changes</SaveButton>
     </HeaderContainer>
   );
 };
