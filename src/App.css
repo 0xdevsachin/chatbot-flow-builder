@@ -1,0 +1,31 @@
+.flow-builder {
+  display: flex;
+  height: 100vh;
+}
+
+.nodes-panel {
+  width: 200px;
+  background: #f0f0f0;
+  padding: 10px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.flow-area {
+  flex: 1;
+  position: relative;
+}
+
+.settings-panel {
+  width: 200px;
+  background: #f0f0f0;
+  padding: 10px;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.text-node {
+  padding: 10px;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
